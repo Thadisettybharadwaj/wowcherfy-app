@@ -28,17 +28,22 @@ const App: React.FC<{}> = () => {
         ...data2[0].products,
         ...data3[0].products,
       ];
-      const mergedProductsMap = new Map();
-      responseFromThreeBranches.forEach((product) => {
-        const existingProduct = mergedProductsMap.get(product.name);
-        if (existingProduct) {
-          existingProduct.sold += product.sold;
+
+      let mergedProducts: ProductType = [];
+      responseFromThreeBranches.forEach((element) => {
+        const findingExisting = mergedProducts.find(
+          (a) => a.name === element.name
+        );
+        if (findingExisting) {
+          console.log(findingExisting, element);
+          findingExisting.sold = findingExisting.sold + element.sold;
         } else {
-          mergedProductsMap.set(product.name, { ...product });
+          mergedProducts.push(element);
         }
       });
-      // console.log(mergedProductsMap.values());
-      const uniqueProducts = Array.from(mergedProductsMap.values());
+      console.log(mergedProducts);
+
+      const uniqueProducts = mergedProducts;
 
       const sortedData = uniqueProducts.sort((a, b) =>
         a.name > b.name ? 1 : -1
